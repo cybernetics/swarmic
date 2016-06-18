@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-org.swarmic.hibernate.weld.WeldHibernateService
+org.swarmic.jpa.core.WeldHibernateService
