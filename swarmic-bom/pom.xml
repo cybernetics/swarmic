@@ -34,56 +34,56 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>camel</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>jta-narayana</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>rest-resteasy</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>security-spi</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>web-spi</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>web-jetty</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>web-undertow</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.swarmic</groupId>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>jpa-hibernate</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>

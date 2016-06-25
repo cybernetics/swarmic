@@ -58,7 +58,7 @@
     <modules>
         <module>swarmic-bom</module>
         <module>swarmic-core</module>
-        <module>swarmic-fractions</module>
+        <module>swarmic-modules</module>
     </modules>
 
 
