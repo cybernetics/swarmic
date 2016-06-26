@@ -29,28 +29,24 @@ import javax.persistence.Persistence;
  */
 public class EntityManagerFactoryReferenceFactory implements ResourceReferenceFactory<EntityManagerFactory> {
 
-    private final String unitName;
+    private final EntityManagerFactory entityManagerFactory;
 
-    EntityManagerFactoryReferenceFactory(String unitName) {
-        this.unitName = unitName;
+    EntityManagerFactoryReferenceFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Override
     public ResourceReference<EntityManagerFactory> createResource() {
         return new ResourceReference<EntityManagerFactory>() {
 
-            private EntityManagerFactory emf;
-
             @Override
             public EntityManagerFactory getInstance() {
-                if (emf == null)
-                    emf = Persistence.createEntityManagerFactory(unitName);
-                return emf;
+                return entityManagerFactory;
             }
 
             @Override
             public void release() {
-                emf.close();
+                entityManagerFactory.close();
             }
         };
     }

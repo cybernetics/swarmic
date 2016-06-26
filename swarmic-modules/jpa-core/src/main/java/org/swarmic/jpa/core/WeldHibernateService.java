@@ -44,7 +44,7 @@ public class WeldHibernateService implements JpaInjectionServices {
 
         String name=pc.unitName();
         LOG.info("Creating EntityManagerReferenceFactory for unit " + name);
-        return new EntityManagerReferenceFactory(name);
+        return new EntityManagerReferenceFactory(createEntityManagerFactory(name));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class WeldHibernateService implements JpaInjectionServices {
         }
         String name=pc.unitName();
         LOG.info("Creating EntityManagerFactoryReferenceFactory for unit " + name);
-        return new EntityManagerFactoryReferenceFactory(name);
+        return new EntityManagerFactoryReferenceFactory(createEntityManagerFactory(name));
     }
 
     @Override
@@ -71,5 +71,9 @@ public class WeldHibernateService implements JpaInjectionServices {
     @Override
     public void cleanup() {
 
+    }
+
+    private EntityManagerFactory createEntityManagerFactory(String name) {
+        return Persistence.createEntityManagerFactory(name);
     }
 }

@@ -46,7 +46,7 @@
             <artifactId>jboss-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.swarmic</groupId>
+            <groupId>org.swarmic.modules</groupId>
             <artifactId>jpa-core</artifactId>
             <version>${project.version}</version>
         </dependency>
