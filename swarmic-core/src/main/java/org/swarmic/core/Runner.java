@@ -19,15 +19,22 @@ package org.swarmic.core;
 import org.jboss.logging.Logger;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.util.ServiceLoader;
 
+
+import javax.annotation.Priority;
 import javax.enterprise.inject.Vetoed;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.function.ToIntFunction;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
- *
  * This class is in charge of Fraction configuration discovery and Swarmic bootstrap.
  * It can be inherited or embedded to add features at boot time
  *
@@ -39,11 +46,13 @@ public class Runner {
     private static final Logger LOG = Logger.getLogger(Runner.class);
 
 
+    private static List<LifecyleAction> lfa = new ArrayList<>();
+
+
     private WeldContainer cdiContainer;
 
     /**
-     *
-     * This method configure the container and starts it.
+     * This method beforeBootstrap the container and starts it.
      * It rturns the build container to allow a third party developper to use it directly in an alternative boot sequence
      *
      * @param args command line args
@@ -54,6 +63,7 @@ public class Runner {
         displayBanner();
         Weld weld = new Weld();
         runConfigurators(new ContainerConfigurator(weld));
+        registerShutdownHook();
         cdiContainer = weld.initialize();
         return cdiContainer;
     }
@@ -61,11 +71,31 @@ public class Runner {
     /**
      * Look for all service loader for {@link ContainerConfigurator} and calls them
      *
-     * @param configurator the container {@link ContainerConfigurator} to configure
+     * @param configurator the container {@link ContainerConfigurator} to beforeBootstrap
      */
     protected void runConfigurators(ContainerConfigurator configurator) {
-        ServiceLoader<ContainerConfiguration> configs = ServiceLoader.load(ContainerConfiguration.class);
-        configs.forEach(c -> {LOG.info("Calling configurator: " + c.getValue().getClass().getCanonicalName());c.getValue().configure(configurator);});
+
+        Stream<LifecyleAction> stream = StreamSupport.stream(ServiceLoader.load(LifecyleAction.class).spliterator(), false);
+
+        ToIntFunction<LifecyleAction> getPriority = l -> l.getClass().isAnnotationPresent(Priority.class) ?
+                l.getClass().getAnnotation(Priority.class).value() : Integer.MAX_VALUE;
+
+        Comparator<LifecyleAction> byPriority = (l1, l2) -> Integer.compare(getPriority.applyAsInt(l1), getPriority.applyAsInt(l2));
+
+        stream.sorted(byPriority).forEachOrdered(c -> {
+            LOG.info("Calling configurator: " + c.getClass().getCanonicalName());
+            c.beforeBootstrap(configurator);
+            lfa.add(c);
+        });
+    }
+
+    protected void registerShutdownHook() {
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+           public void run() {
+               lfa.forEach(LifecyleAction::afterShutdown);
+           }
+        });
     }
 
     /**

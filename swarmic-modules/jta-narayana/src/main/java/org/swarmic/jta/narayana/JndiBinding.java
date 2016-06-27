@@ -18,42 +18,38 @@ package org.swarmic.jta.narayana;
 
 import com.arjuna.ats.jta.utils.JNDIManager;
 import org.jboss.logging.Logger;
-import org.jnp.server.NamingBeanImpl;
+import org.swarmic.core.LifecyleAction;
+import org.swarmic.core.ContainerConfigurator;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import javax.enterprise.inject.spi.BeforeShutdown;
+import javax.annotation.Priority;
 import javax.enterprise.inject.spi.DeploymentException;
-import javax.enterprise.inject.spi.Extension;
 
 /**
- *
- * This CDI extension starts Jboss JNDI server when CDI container starts
- * and shut it down with container.
- *
- * @author Antoine Sabot-Durand
+ * Created by antoine on 27/06/2016.
  */
-public class JndiServerExtension implements Extension {
+@Priority(100)
+public class JndiBinding implements LifecyleAction {
 
-    private final NamingBeanImpl namingBean = new NamingBeanImpl();
 
-    private static Logger LOG = Logger.getLogger(JndiServerExtension.class);
 
-    public void startJndiServer(@Observes BeforeBeanDiscovery bbd) {
+    private static Logger LOG = Logger.getLogger(JndiBinding.class);
+
+    @Override
+    public void beforeBootstrap(ContainerConfigurator configurator) {
+
         try {
-            LOG.info("Starting JNDI Server");
-            // Start JNDI server
-            namingBean.start();
             // Bind JTA implementation with default names
             JNDIManager.bindJTAImplementation();
         } catch (Exception e) {
             throw new DeploymentException("An error occurred while starting JNDI server", e);
         }
+
     }
 
-    public void stopJndiServer(@Observes BeforeShutdown bs) {
-        LOG.info("Stoping JNDI Server");
-        namingBean.stop();
+    @Override
+    public void afterShutdown() {
+
     }
+
 
 }

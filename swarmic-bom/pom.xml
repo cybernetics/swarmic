@@ -42,6 +42,13 @@
 
             <dependency>
                 <groupId>org.swarmic.modules</groupId>
+                <artifactId>jndi-server</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.swarmic.modules</groupId>
                 <artifactId>jta-narayana</artifactId>
                 <version>${project.version}</version>
                 <scope>compile</scope>

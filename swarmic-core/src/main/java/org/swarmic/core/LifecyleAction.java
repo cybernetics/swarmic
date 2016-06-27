@@ -18,17 +18,24 @@ package org.swarmic.core;
 
 /**
  *
- * This Service interface is used to configure the container before it is built
+ * This Service interface is used to perform action before the container bootsrap and after its shutdown
  *
  * @author Antoine Sabot-Durand
  */
-public interface ContainerConfiguration {
+public interface LifecyleAction {
+
 
     /**
-     * Method called by the bootstrap sequence to alter container configuration
+     * Method called before the container bootstrap sequence to start low level service and alter container configuration
      *
      * @param configurator the {@link ContainerConfigurator} object
      */
-    void configure(ContainerConfigurator configurator);
+    void beforeBootstrap(ContainerConfigurator configurator);
+
+    /**
+     * Method called after the container shutdown to stop low level services and perform cleanup tasks
+     *
+     */
+    void afterShutdown();
 
 }
